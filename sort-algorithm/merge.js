@@ -12,64 +12,36 @@
 
 const k = [4,2,3,5,6,1,0,7,8];
 
-const merge = (arr,left,mid,right) => {
-    let l1 = mid - left + 1; // Số phần tử của mảng thứ nhất
-    let l2 = right - mid; // Số phần tử của mảng thứ hai
+const _mergeArray = (arr1,arr2) => {
+    const arr = [];
 
-    // Tạo hai mảng tạm để lưu hai mảng con
-    let arr1 = [], arr2 = [];
-
-    // Sao chép phần tử 2 mảng con vào mảng tạm
-    for(let i = 0; i < l1; i++){
-        arr1.push(arr[left+i]);
-    }
-    for(let i = 0; i < l2; i++){
-        arr2.push(arr[mid+i+1]);
+    while(arr1.length && arr2.length){
+        arr.push(arr1[0] > arr2[0] ? arr2.shift() : arr1.shift())
     }
 
-    // current là vị trí hiện tại trong mảng A
-    let i = 0, j = 0;
-
-    // Trộn hai mảng vào nhau theo đúng thứ tự
-    while (i < l1 && j < l2){
-        if (arr1[i] <= arr2[j])
-            arr.push(arr1[i++]);
-        else
-            arr.push(arr2[j++]);
+    //if we still have values in one of two array, let's add them at the end of `arr`
+    while (arr1.length) {
+        arr.push(arr1.shift())
+    }
+    while (arr2.length) {
+        arr.push(arr2.shift())
     }
 
-    // Nếu mảng thứ nhất còn phần tử thì copy nó vào mảng A
-    while (i < l1){
-        arr.push(arr1[i++]);
-    }
-
-    // Nếu mảng thứ hai còn phần tử thì copy nó vào mảng A
-    while (j < l2){
-        arr.push(arr2[j++]);
-    }
-    //return arr;
-}
-
-const mergeSort = (arr,left,right) => {
-    // Kiểm tra xem còn chia đôi mảng được không
-    if (left < right)
-    {
-        // Tìm phần tử chính giữa
-        // left + (right - left) / 2 tương đương với (left + right) / 2
-        // việc này giúp tránh bị tràn số với left, right quá lớn
-        let mid = Math.floor(left + (right - left) / 2);
- 
-        // Sắp xếp mảng thứ nhất
-        mergeSort(arr, left, mid);
-        // Sắp xếp mảng thứ hai
-        mergeSort(arr, mid + 1, right);
-
-        // Trộn hai mảng đã sắp xếp
-        merge(arr, left, mid, right);
-
-        
-    }
     return arr;
 }
 
-console.log(mergeSort(k,0,k.length-1));
+const mergeSort = (arr) => {
+    if(arr.length < 2) return arr;
+
+    const mid = Math.floor(arr.length / 2);
+    const arr_l = arr.slice(0,mid);     // cut between 0 to mid -1
+    const arr_r = arr.slice(mid,arr.length); // cut between mid to length -1
+
+    const sorted_l = mergeSort(arr_l);
+    const sorted_r = mergeSort(arr_r);
+
+    return _mergeArray(sorted_l,sorted_r);
+
+}
+
+console.log(mergeSort(k));
