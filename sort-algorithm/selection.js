@@ -14,7 +14,7 @@ const selection = (arr) => {
         min = i; // tạm thời xem A[i] là nhỏ nhất
         
         for(let j = i +1; j < arr.length; j++){
-            if(arr[j] < arr[min]){
+            if(arr[min] > arr[j]){
                 min = j;
             }
         }
